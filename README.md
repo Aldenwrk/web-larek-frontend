@@ -48,10 +48,10 @@ yarn build
 ```
 interface ICard {
   id: string;
-  description: string;
-  image: string;
+  description?: string;
+  image?: string;
   title: string;
-  category: string;
+  category?: string;
   price: number|null;
 }
 ```

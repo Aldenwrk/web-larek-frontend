@@ -1,4 +1,3 @@
-//пока интерфейсы и типы в одном месте для удобства, разложить по файлам перед реализацией
 export interface ICard {
   id: string;
   description?: string;

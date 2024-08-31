@@ -177,11 +177,12 @@ interface IRequestError {
 
 #### Класс Page
 Реализует управление отображением каталога товаров и счётчика товаров в корзине. 
-- constructor(cardsListContainer: HTMLElement, events: IEvents) - Конструктор принимает элемент-контейнер для списка товаров и экземпляр класса `EventEmitter`.
+- constructor(cardsListContainer: HTMLElement,cardsListTemplate: HTMLTemplateElement, events: IEvents) - Конструктор принимает элемент-контейнер для списка товаров, шаблон разметки списка и экземпляр класса `EventEmitter`.
 Поля класса:
 - cardsListContainer: HTMLElement - контейнер для списка товаров
 - basketButton: HTMLElement - кнопка корзины
 - basketItemsCounter - счётчик товаров на иконке корзины
+- cardsListTemplate: HTMLTemplateElement - хранит шаблон разметки для списка
 Методы:
 set cardsList(items:TCardPreview[]): void - собирает список html элементов из объектов карточек
 set basketItemsCounter - обновляет значение счётчика товаров в корзине

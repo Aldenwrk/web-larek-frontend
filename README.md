@@ -261,3 +261,5 @@ set basketItemsCounter - обновляет значение счётчика т
 - `DeliveryFormError:change` - изменение состояния валидации формы доставки
 - `ContactsFormError:change` - изменение состояния валидации формы контактов
 - `successMessage:close` - закрытие окна подтверждения покупки
+
+Спасибо за развёрнутое ревью!

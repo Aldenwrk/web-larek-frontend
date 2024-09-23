@@ -12,21 +12,18 @@ export interface ICardsList {
   items: ICard[];
 }
 
-export interface ICardsData {
+export interface IAppData {
   cards: ICard[];
   preview: string|null;
   addItem(card: ICard): void;
   getCard(cardId: string): ICard;
-}
-
-export type TCardPreview = Omit<ICard, 'description'>;
-export type TCardBasketItem = Pick<ICard, 'id'|'title'|'price'>;
-
-export interface IBasketData {
   cart: ICard[];
   total: number;
   deleteItem(id: string): void;
 }
+
+export type TCardPreview = Omit<ICard, 'description'>;
+export type TCardBasketItem = Pick<ICard, 'id'|'title'|'price'>;
 
 export interface IOrderData {
   payment: string;
@@ -42,4 +39,13 @@ export interface IOrderResult {
 
 export interface IRequestError {
   error: string;
+}
+
+
+export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+
+export interface IApi {
+  baseUrl: string;
+  get<T>(uri: string): Promise<T>;
+  post<T>(uri: string, data: object, method: ApiPostMethods): Promise<T>;
 }

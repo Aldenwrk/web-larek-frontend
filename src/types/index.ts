@@ -5,6 +5,7 @@ export interface ICard {
   title: string;
   category: string;
   price: number|null;
+  index?: number;
 }
 
 export interface ICardsList {
@@ -15,7 +16,7 @@ export interface ICardsList {
 export interface IAppData {
   cards: ICard[];
   preview: string|null;
-  addItem(card: ICard): void;
+  addItem(cardId: string): void;
   getCard(cardId: string): ICard;
   cart: ICard[];
   total: number;
@@ -24,6 +25,7 @@ export interface IAppData {
 
 export type TCardPreview = Omit<ICard, 'description'>;
 export type TCardBasketItem = Pick<ICard, 'id'|'title'|'price'>;
+export type TAnyCard = ICard|TCardPreview|TCardBasketItem;
 
 export interface IOrderData {
   payment: string;

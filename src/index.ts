@@ -2,17 +2,20 @@ import { AppApi } from './components/AppApi';
 import { AppData } from './components/AppData';
 import { Api } from './components/base/api';
 import { EventEmitter } from './components/base/events';
+import { CardBasketView, CardCatalogueView } from './components/CardView';
 import './scss/styles.scss';
 import { IApi } from './types';
 import { API_URL, settings } from './utils/constants';
 
+const basketCardTemplate:HTMLTemplateElement = document.getElementById('card-basket') as HTMLTemplateElement;
+const catalogCardTemplate:HTMLTemplateElement = document.getElementById('card-catalog') as HTMLTemplateElement;
 const events = new EventEmitter();
 
 const baseApi:IApi = new Api(API_URL, settings)
 const appApi = new AppApi(baseApi);
 
 const appData = new AppData(events);
-
+/*//получаем карточки с сервера и сохраняем в модель
 appApi.getCards().then((data)=>{
         appData.cards = data;
         console.log(appData.cards);
@@ -20,8 +23,8 @@ appApi.getCards().then((data)=>{
     .catch((err)=>{
         console.error(err);
     })
+*/
 
-/*
 const items = [
         {
             "id": "854cef69-976d-4c2a-a18c-2aa45046c390",
@@ -110,11 +113,18 @@ appData.cards = items;
 console.log(appData.getCard("b06cde61-912f-4663-9751-09956c0eed67"));
 console.log(appData.getTotal());
 
-appData.addItem(appData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"));
+appData.addItem("c101ab44-ed99-4a54-990d-47aa2bb4e7d9");
+appData.addItem("854cef69-976d-4c2a-a18c-2aa45046c390");
 console.log(appData.cart);
 console.log(appData.checkInCart("854cef69-976d-4c2a-a18c-2aa45046c390"));
 appData.preview = "854cef69-976d-4c2a-a18c-2aa45046c390";
 console.log(appData.preview)
 console.log(appData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"))
-appData.deleteItem("854cef69-976d-4c2a-a18c-2aa45046c390");
-console.log(appData.cart);*/
+//appData.deleteItem("854cef69-976d-4c2a-a18c-2aa45046c390");
+console.log(appData.cart);
+
+const testDeck = document.querySelector('.gallery');
+/*const card = new CardBasketView(basketCardTemplate, events);
+testDeck.append(card.render(appData.cart[0]));*/
+const card = new CardCatalogueView(catalogCardTemplate, events);
+testDeck.append(card.render(items[0]));

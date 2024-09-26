@@ -52,11 +52,13 @@ export class AppData implements IAppData {
    return this._cart.some((item)=>item.id===cardId)
   }
 
-  addItem(card: ICard){
-    if(!this.checkInCart(card.id)){
-      this._cart.push(card);
+  addItem(cardId: string){
+    if(!this.checkInCart(cardId)){
+      this._cart.push(this.getCard(cardId));
+      this.updateIndex(this._cart);
+
       this.events.emit('basket:changed');
-    }  //Потестить, мб лучше переписать на айди
+    } 
   };
 
   deleteItem(cardId: string){
@@ -64,9 +66,16 @@ export class AppData implements IAppData {
       this._cart = this._cart.filter((item)=>{
         return item.id !== cardId
       })
+      this.updateIndex(this._cart);
     this.events.emit('basket:changed');
     }
   };
+
+  updateIndex(_cart:ICard[]){
+    for(let i = 0; i < this._cart.length;i++){
+      this._cart[i].index = i+1;
+    }
+  }
 
   getTotal(){
     this.total = this._cart.length

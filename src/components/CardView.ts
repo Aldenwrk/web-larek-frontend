@@ -142,7 +142,7 @@ export class CardCatalogueView extends CardView{
         console.log('card:remove', {card:this});
       });
   }
-    console.log(container);
+   // console.log(container);
     
   }
 
@@ -150,7 +150,12 @@ export class CardCatalogueView extends CardView{
     const {id, title, price, image, category, ...otherCardData} = cardData;
     if (id) this.id = id;
     if (title) this.title = title;
-    if (price) this.price = price;
+    if(price){
+      this.price = price;
+    } else {
+      this.price = null;
+    }
+
     if (image) this.image = image;
     if (category) this.category = category;
     Object.assign(this, otherCardData);
@@ -167,7 +172,7 @@ export class CardCatalogueView extends CardView{
   }
 
   set price(cardPrice:number|null){
-    cardPrice === null ? this.setText(this._price, "Бесценно") : this.setText(this._price, cardPrice.toString());
+    cardPrice === null ? this.setText(this._price, "Бесценно") : this.setText(this._price, `${cardPrice.toString()} синапсов`);
   }
 
   set image(cardImage:string){
@@ -217,7 +222,7 @@ export class CardPreview extends CardCatalogueView{
         console.log('card:remove', {card:this});
       });
   }
-    console.log(container);
+  //  console.log(container);
     
   }
 
@@ -225,7 +230,11 @@ export class CardPreview extends CardCatalogueView{
     const {id, title, price, image, category, ...otherCardData} = cardData;
     if (id) this.id = id;
     if (title) this.title = title;
-    if (price) this.price = price;
+    if(price){
+      this.price = price;
+    } else {
+      this.price = null;
+    }
     if (image) this.image = image;
     if (category) this.category = category;
     Object.assign(this, otherCardData);

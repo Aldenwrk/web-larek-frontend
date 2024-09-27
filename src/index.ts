@@ -2,15 +2,18 @@ import { AppApi } from './components/AppApi';
 import { AppData } from './components/AppData';
 import { Api } from './components/base/api';
 import { EventEmitter } from './components/base/events';
-import { CardBasketView, CardCatalogueView } from './components/CardView';
+import { CardBasketView, CardCatalogueView, CardPreview } from './components/CardView';
 import './scss/styles.scss';
 import { IApi } from './types';
 import { API_URL, settings } from './utils/constants';
 import { cloneTemplate } from './utils/utils';
+import { Page } from './components/Page';
 
+//шаблоны карточек
 const previewCardTemplate:HTMLTemplateElement = document.getElementById('card-preview') as HTMLTemplateElement;
 const basketCardTemplate:HTMLTemplateElement = document.getElementById('card-basket') as HTMLTemplateElement;
 const catalogCardTemplate:HTMLTemplateElement = document.getElementById('card-catalog') as HTMLTemplateElement;
+
 const events = new EventEmitter();
 
 const baseApi:IApi = new Api(API_URL, settings)
@@ -27,7 +30,7 @@ appApi.getCards().then((data)=>{
     })
 */
 
-const items = [
+const itemsArray = [
         {
             "id": "854cef69-976d-4c2a-a18c-2aa45046c390",
             "description": "Если планируете решать задачи в тренажёре, берите два.",
@@ -110,8 +113,8 @@ const items = [
         }
     ]
 
-appData.cards = items;
-
+appData.cards = itemsArray;
+//не забыть почистить тестовый код
 console.log(appData.getCard("b06cde61-912f-4663-9751-09956c0eed67"));
 console.log(appData.getTotal());
 
@@ -130,5 +133,22 @@ const testDeck = document.querySelector('.gallery');
 testDeck.append(card.render(appData.cart[0]));*/
 /*const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events);
 testDeck.append(card.render(items[0]));*/
-const card = new CardCatalogueView(cloneTemplate(previewCardTemplate), events);
-testDeck.append(card.render(items[0]));
+const card = new CardPreview(cloneTemplate(previewCardTemplate), events);
+testDeck.append(card.render(itemsArray[0]));
+
+const page = new Page (document.body, events)
+console.log(itemsArray);
+//const card2 = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events);
+const testArray = itemsArray.map((item)=>{
+    const card2 = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events)
+    return card2.render(item)
+});
+//[card2.render(itemsArray[0]), card2.render(itemsArray[1])]
+page.render({gallery:testArray})
+
+/*const cardsArrayHTML = itemsArray.map((item) => {
+    const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events)
+    return card.render(item)
+});
+console.log(cardsArrayHTML);
+//page.render(cardsArrayHTML)*/

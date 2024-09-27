@@ -130,6 +130,81 @@ export class CardCatalogueView extends CardView{
     this._button = this.element.querySelector('.card');
     this._image = this.element.querySelector('.card__image');
     this._category = this.element.querySelector('.card__category');
+
+    if (this._button) {
+      this._button.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  } else {
+      container.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  }
+    console.log(container);
+    
+  }
+
+  render(cardData:ICard){
+    const {id, title, price, image, category, ...otherCardData} = cardData;
+    if (id) this.id = id;
+    if (title) this.title = title;
+    if (price) this.price = price;
+    if (image) this.image = image;
+    if (category) this.category = category;
+    Object.assign(this, otherCardData);
+    //console.log(this.element);
+    return this.element;
+  }
+
+  set id(cardId:string){
+    this._id = cardId;
+  }
+
+  set title(cardTitle: string){
+    this.setText(this._title, cardTitle.toString());
+  }
+
+  set price(cardPrice:number|null){
+    cardPrice === null ? this.setText(this._price, "Бесценно") : this.setText(this._price, cardPrice.toString());
+  }
+
+  set image(cardImage:string){
+    this.setImage(this._image, `${CDN_URL}` + `${cardImage}`, this.title);
+  }
+
+  set category(cardCategory:string){
+    this.setText(this._category, cardCategory);
+  }
+  deleteCard(){
+    this.element.remove();
+    this.element = null;
+  }
+}
+
+export class CardPreview extends CardCatalogueView{
+  protected element: HTMLElement;
+  protected events: IEvents;
+  protected _id: string;
+  protected _title: HTMLElement; 
+	protected _price: HTMLElement; 
+	protected _button: HTMLButtonElement; 
+  protected _category: HTMLElement;
+  protected _image: HTMLImageElement;
+  protected _description: HTMLElement;
+
+  constructor(container:HTMLElement, events:IEvents){
+    super(container, events)
+    this.element = container;
+    this.events = events;
+
+    this._title = this.element.querySelector('.card__title');
+    this._price = this.element.querySelector('.card__price');
+    this._button = this.element.querySelector('.card');
+    this._image = this.element.querySelector('.card__image');
+    this._category = this.element.querySelector('.card__category');
+    this._description = this.element.querySelector('.card__text');
     
     if (this._button) {
       this._button.addEventListener('click', ()=>{
@@ -177,6 +252,11 @@ export class CardCatalogueView extends CardView{
   set category(cardCategory:string){
     this.setText(this._category, cardCategory);
   }
+
+  set description(cardDescription:string){
+    this.setText(this._description, cardDescription);
+  }
+
   deleteCard(){
     this.element.remove();
     this.element = null;

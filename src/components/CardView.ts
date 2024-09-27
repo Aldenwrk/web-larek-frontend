@@ -4,6 +4,10 @@ import { cloneTemplate } from "../utils/utils";
 import { IEvents } from "./base/events";
 import { Component } from "./Component";
 
+/*interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}*/
+
 //общий родительский класс для всех карточек
 export class CardView extends Component<ICard>{
   protected _title: HTMLElement; 
@@ -11,10 +15,10 @@ export class CardView extends Component<ICard>{
   protected element: HTMLElement;
   protected events: IEvents;
 
-  constructor(template:HTMLTemplateElement, events:IEvents){
-    super();
+  constructor(container:HTMLElement, events:IEvents){
+    super(container);
     this.events = events;
-    this.element = cloneTemplate(template);
+    this.element = container;
 
     this._title = this.element.querySelector('.card__title');
     this._price = this.element.querySelector('.card__price');
@@ -48,20 +52,29 @@ export class CardBasketView extends CardView{
 	protected _button: HTMLButtonElement; 
   protected _index: HTMLElement;
 
-  constructor(template:HTMLTemplateElement, events:IEvents){
-    super(template, events)
+  constructor(container:HTMLTemplateElement, events:IEvents){
+    super(container, events);
     this.events = events;
-    this.element = cloneTemplate(template);
+    this.element = container;
 
     this._title = this.element.querySelector('.card__title');
     this._price = this.element.querySelector('.card__price');
     this._button = this.element.querySelector('.basket__item-delete');
     this._index = this.element.querySelector('.basket__item-index');
 
-    this._button.addEventListener('click', ()=>{
-      this.events.emit('card:remove', {card:this});
-      console.log('card:remove', {card:this});
-    });
+
+
+    if (this._button) {
+      this._button.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  } else {
+      container.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  }
   }
 
   render(cardData:ICard){
@@ -107,27 +120,30 @@ export class CardCatalogueView extends CardView{
   protected _category: HTMLElement;
   protected _image: HTMLImageElement;
 
-  /*<template id="card-catalog">
-  <button class="gallery__item card">
-    <span class="card__category card__category_soft">софт-скил</span>
-    <h2 class="card__title">+1 час в сутках</h2>
-    <img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
-    <span class="card__price">750 синапсов</span>
-  </button>
-</template>*/
-
-  constructor(template:HTMLTemplateElement, events:IEvents){
-    super(template, events)
+  constructor(container:HTMLElement, events:IEvents){
+    super(container, events)
+    this.element = container;
     this.events = events;
-    this.element = cloneTemplate(template);
 
     this._title = this.element.querySelector('.card__title');
     this._price = this.element.querySelector('.card__price');
     this._button = this.element.querySelector('.card');
     this._image = this.element.querySelector('.card__image');
     this._category = this.element.querySelector('.card__category');
-    //кнопка не находится, завтра попробовать вернуть наследный контейнер и работать через него
-    console.log(this._button);
+    
+    if (this._button) {
+      this._button.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  } else {
+      container.addEventListener('click', ()=>{
+        this.events.emit('card:remove', {card:this});
+        console.log('card:remove', {card:this});
+      });
+  }
+    console.log(container);
+    
   }
 
   render(cardData:ICard){
@@ -138,7 +154,7 @@ export class CardCatalogueView extends CardView{
     if (image) this.image = image;
     if (category) this.category = category;
     Object.assign(this, otherCardData);
-    console.log(this.element);
+    //console.log(this.element);
     return this.element;
   }
 

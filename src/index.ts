@@ -6,6 +6,7 @@ import { CardBasketView, CardCatalogueView } from './components/CardView';
 import './scss/styles.scss';
 import { IApi } from './types';
 import { API_URL, settings } from './utils/constants';
+import { cloneTemplate } from './utils/utils';
 
 const basketCardTemplate:HTMLTemplateElement = document.getElementById('card-basket') as HTMLTemplateElement;
 const catalogCardTemplate:HTMLTemplateElement = document.getElementById('card-catalog') as HTMLTemplateElement;
@@ -124,7 +125,7 @@ console.log(appData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"))
 console.log(appData.cart);
 
 const testDeck = document.querySelector('.gallery');
-/*const card = new CardBasketView(basketCardTemplate, events);
+/*const card = new CardBasketView(cloneTemplate(basketCardTemplate), events);
 testDeck.append(card.render(appData.cart[0]));*/
-const card = new CardCatalogueView(catalogCardTemplate, events);
+const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events);
 testDeck.append(card.render(items[0]));

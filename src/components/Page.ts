@@ -23,8 +23,8 @@ export class Page extends Component<IPage>{
     this._gallery = container.querySelector('.gallery');
     this._wrapper = container.querySelector('.page__wrapper');
     this._basketButton.addEventListener('click', ()=>{
-      this.events.emit('card:remove', {card:this});
-      console.log('card:remove', {card:this});
+      this.events.emit('basket:open', {card:this});
+      console.log('basket:open', {card:this});
     });
   }
 

@@ -1,0 +1,49 @@
+import { ICard } from "../types";
+import { createElement, ensureElement } from "../utils/utils";
+import { IEvents } from "./base/events";
+import { Component } from "./Component";
+interface IBasket {
+  items: HTMLElement[];
+  basketPriceTotal: number;
+}
+
+export class Basket extends Component<IBasket>{
+  protected _basketListContainer: HTMLUListElement;
+  protected _basketPriceTotal: HTMLElement;
+  protected _button:HTMLButtonElement;
+  protected events:IEvents;
+
+  constructor(container:HTMLElement, events:IEvents){
+    super(container);
+    this.events = events;
+    this.items = [];//пустой массив, для разметки добавленных карточек и проверки
+
+    this._basketListContainer = ensureElement<HTMLUListElement>('.basket__list', this.container);
+    console.log(this._basketListContainer)
+    this._button = ensureElement<HTMLButtonElement>('.basket__button', this.container);
+    this._basketPriceTotal = ensureElement<HTMLElement>('.basket__price', this.container);
+    this._button.addEventListener('click', ()=>{
+      this.events.emit('order:open');
+    });
+  }
+
+  set total(totalPrice:number){
+    this.setText(this._basketPriceTotal, `${totalPrice} синапсов`)
+  }
+
+  set items(basketCardsArray:HTMLElement[]){
+    console.log(basketCardsArray)
+    this.setText(this._basketListContainer, `скр скр скр в белых найках`)//работает
+   /* if(!basketCardsArray.length){
+      this._basketListContainer.replaceChildren(createElement<HTMLParagraphElement>('p', {
+        textContent: 'В корзине пусто'
+    }));
+    }else{
+      this._basketListContainer.replaceChildren(...basketCardsArray);
+    }*/
+  }
+  //уточнить про заглушку
+  //первым делом отладить штуку с replaceChildren - элемент определяется, данные передаются
+  //в методе всё равно undefined
+  //корзина выводится в модалку, не выводится контент
+}

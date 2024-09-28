@@ -8,28 +8,79 @@ import { IApi } from './types';
 import { API_URL, settings } from './utils/constants';
 import { cloneTemplate } from './utils/utils';
 import { Page } from './components/Page';
+import { Modal } from './components/Modal';
+import { Basket } from './components/Basket';
 
-//шаблоны карточек
+//шаблоны 
 const previewCardTemplate:HTMLTemplateElement = document.getElementById('card-preview') as HTMLTemplateElement;
 const basketCardTemplate:HTMLTemplateElement = document.getElementById('card-basket') as HTMLTemplateElement;
 const catalogCardTemplate:HTMLTemplateElement = document.getElementById('card-catalog') as HTMLTemplateElement;
+const basketTemplate: HTMLTemplateElement = document.getElementById('basket') as HTMLTemplateElement;
+
 
 const events = new EventEmitter();
 
 const baseApi:IApi = new Api(API_URL, settings)
 const appApi = new AppApi(baseApi);
-
 const appData = new AppData(events);
-/*//получаем карточки с сервера и сохраняем в модель
-appApi.getCards().then((data)=>{
-        appData.cards = data;
-        console.log(appData.cards);
-    })
-    .catch((err)=>{
-        console.error(err);
-    })
-*/
+const page = new Page (document.body, events);
+const basket = new Basket(cloneTemplate(basketTemplate), events);
 
+//получаем карточки с сервера, сохраняем в модель 
+appApi.getCards().then((data)=>{
+    appData.cards = data;
+    console.log(appData.cards);
+    events.emit('initialData:loaded');
+    console.log('loaded');
+
+})
+.catch((err)=>{
+    console.error(err);
+})
+
+
+
+events.on('initialData:loaded', ()=>{
+    console.log(appData.cards);
+    const cardsArray = appData.cards.map((item)=>{
+        const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events)
+        return card.render(item)
+    });
+    page.render({gallery:cardsArray});
+})
+
+const modalContainer = document.getElementById('modal-container');
+const modal = new Modal(modalContainer, events);
+const card2 = new CardPreview(cloneTemplate(previewCardTemplate), events);
+
+//const card3 = new CardBasketView(cloneTemplate(basketCardTemplate), events);
+
+events.on('basket:open', ()=>{
+    appData.addItem("c101ab44-ed99-4a54-990d-47aa2bb4e7d9");
+    appData.addItem("854cef69-976d-4c2a-a18c-2aa45046c390");
+    const cardsArray3 = appData.cart.map((item)=>{
+        const card3 = new CardBasketView(cloneTemplate(basketCardTemplate), events);
+        return card3.render(item);
+    })
+    modal.render({modalContent:basket.render({items:cardsArray3})})
+  //  basket.render({items:cardsArray3})
+})
+
+
+//console.log(appData.cards)
+//console.log(appData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"));
+//console.log(card2.render(appData.cards[0]));
+/*events.on('initialData:loaded', ()=>{
+    modal.render({modalContent:card2.render(appData.cards[0])})
+})*/
+
+
+
+
+
+
+
+/*
 const itemsArray = [
         {
             "id": "854cef69-976d-4c2a-a18c-2aa45046c390",
@@ -125,26 +176,22 @@ console.log(appData.checkInCart("854cef69-976d-4c2a-a18c-2aa45046c390"));
 appData.preview = "854cef69-976d-4c2a-a18c-2aa45046c390";
 console.log(appData.preview)
 console.log(appData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"))
-//appData.deleteItem("854cef69-976d-4c2a-a18c-2aa45046c390");
+appData.deleteItem("854cef69-976d-4c2a-a18c-2aa45046c390");
 console.log(appData.cart);
 
-const testDeck = document.querySelector('.gallery');
+//const testDeck = document.querySelector('.gallery');
 /*const card = new CardBasketView(cloneTemplate(basketCardTemplate), events);
 testDeck.append(card.render(appData.cart[0]));*/
 /*const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events);
 testDeck.append(card.render(items[0]));*/
-const card = new CardPreview(cloneTemplate(previewCardTemplate), events);
-testDeck.append(card.render(itemsArray[0]));
+//const card = new CardPreview(cloneTemplate(previewCardTemplate), events);
+//testDeck.append(card.render(itemsArray[0]));
 
-const page = new Page (document.body, events)
-console.log(itemsArray);
+//console.log(itemsArray);
 //const card2 = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events);
-const testArray = itemsArray.map((item)=>{
-    const card2 = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events)
-    return card2.render(item)
-});
+
 //[card2.render(itemsArray[0]), card2.render(itemsArray[1])]
-page.render({gallery:testArray})
+
 
 /*const cardsArrayHTML = itemsArray.map((item) => {
     const card = new CardCatalogueView(cloneTemplate(catalogCardTemplate), events)
@@ -152,3 +199,5 @@ page.render({gallery:testArray})
 });
 console.log(cardsArrayHTML);
 //page.render(cardsArrayHTML)*/
+
+

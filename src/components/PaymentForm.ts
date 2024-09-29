@@ -2,7 +2,12 @@ import { IEvents } from "./base/events";
 import { Form } from "./Form";
 import { ensureAllElements } from "../utils/utils";
 
-export class PaymentForm extends Form {
+interface IPaymentForm {
+  address: string
+  payment: string
+}
+
+export class PaymentForm extends Form<IPaymentForm> {
   protected _paymentButtons:HTMLButtonElement[];
 
   constructor(container:HTMLFormElement, events:IEvents){

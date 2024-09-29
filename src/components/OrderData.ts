@@ -23,9 +23,14 @@ export class OrderData implements IOrderData{
     }
   }
 
-  setPaymentField(field: keyof IOrderData, value: string) {
+  setPaymentFields(field: keyof IOrderData, value: string) {
     this[field] = value
     this.validatePaymentForm()
+}
+
+setContactFields(field: keyof IOrderData, value: string) {
+  this[field] = value
+  this.validateContactForm()
 }
 
   set payment(inputPayment:string){
@@ -52,19 +57,29 @@ export class OrderData implements IOrderData{
       errors.address = "Заполните поле адреса"
     }
     this.formErrors = errors;
-    this.events.emit('formErrors:change', this.formErrors);
+    this.events.emit('formErrorsPayment:change', this.formErrors);
     return Object.keys(errors).length === 0;
   }
 
   validateContactForm(){
+    const errors: typeof this.formErrors = {};
+
     if(!this.phone){
-      const error = "Заполните поле телефона"
-      return error;
+     errors.phone = "Заполните поле телефона" 
     }
 
     if(!this.email){
-      const error = "Заполните поле email"
-      return error;
+      errors.email = "Заполните поле email"
     }
+    this.formErrors = errors;
+    this.events.emit('formErrorsContact:change', this.formErrors);
+    return Object.keys(errors).length === 0;
   }
+
+  resetOrder() {
+    this.payment = ''
+    this.address = ''
+    this.email = ''
+    this.phone = ''
+}
 }

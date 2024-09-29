@@ -4,7 +4,7 @@ import { Api } from './components/base/api';
 import { EventEmitter } from './components/base/events';
 import { CardBasketView, CardCatalogueView, CardPreview } from './components/CardView';
 import './scss/styles.scss';
-import { IApi } from './types';
+import { IApi, IFormErrors, IOrderData } from './types';
 import { API_URL, settings } from './utils/constants';
 import { cloneTemplate } from './utils/utils';
 import { Page } from './components/Page';
@@ -12,6 +12,7 @@ import { Modal } from './components/Modal';
 import { Basket } from './components/Basket';
 import { ContactForm } from './components/ContactForm';
 import { PaymentForm } from './components/PaymentForm';
+import { OrderData } from './components/OrderData';
 
 //шаблоны 
 const previewCardTemplate:HTMLTemplateElement = document.getElementById('card-preview') as HTMLTemplateElement;
@@ -33,6 +34,7 @@ const contactForm = new ContactForm(cloneTemplate(contactFormTemplate), events);
 const paymentForm = new PaymentForm(cloneTemplate(paymentFormTemplate), events);
 const modal = new Modal(modalContainer, events);
 const cardPreview = new CardPreview(cloneTemplate(previewCardTemplate), events);
+const orderData = new OrderData(events);
 
 
 
@@ -55,6 +57,16 @@ events.on('initialData:loaded', ()=>{
     });
     page.render({gallery:cardsArray});
 })
+
+events.on('modal:open', () => {
+    page.locked = true;
+});
+
+
+events.on('modal:close', () => {
+    page.locked = false;
+});
+
 //открытие корзины
 events.on('basket:open', ()=>{
     const cardsArray = appData.cart.map((item)=>{
@@ -109,10 +121,22 @@ events.on('basket:changed', ()=>{
 });
 //события форм заказа
 events.on('order:open', ()=>{
-    modal.render({modalContent:paymentForm.render({valid: true, errors:["Заполните поля"]})}); 
+    modal.render({modalContent:paymentForm.render({valid: false, errors: [], address: '', payment: ''})}); 
+ });
 
- });
- 
- events.on('order:submit', ()=>{
-     modal.render({modalContent:contactForm.render({valid: true, errors:["Заполните поля"]})});
- });
+ events.on('formErrorsPayment:change', (formErrors: IFormErrors)=> {
+    const isEmpty = Object.keys(formErrors).length === 0
+    const validation = {errors: [formErrors.address || '', formErrors.payment || ''], valid: isEmpty}
+    paymentForm.render(validation)
+});
+
+events.on(/^order\..*:change/, (data: { field: keyof IOrderData; value: string }) => {
+    const { field, value } = data
+    console.log(data);
+    orderData.setPaymentFields(field, value)
+});
+
+events.on('order:submit', ()=> {
+    // console.log(orderData.getUserDate());
+    modal.render({modalContent:contactForm.render({valid: false, errors: [], address: '', payment: ''})});
+});

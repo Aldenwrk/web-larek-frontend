@@ -8,7 +8,7 @@ interface IForm extends IFormErrors{
   errors:string[];
 }
 
-export abstract class Form extends Component<IForm>{
+export abstract class Form<T> extends Component<IForm>{
   protected _submitButton:HTMLButtonElement;
   protected _formErrorContainer: HTMLSpanElement;
   protected events: IEvents;
@@ -46,7 +46,13 @@ export abstract class Form extends Component<IForm>{
   set errors(errorMessages:string[]){
     this.setText(this._formErrorContainer, errorMessages);
   }
-  
+
+  protected onInput(field: keyof T, value: string){
+    this.events.emit(`${this.formName}.${String(field)}:change`, {
+      field,
+      value
+    });
+  }
 
   render(data:IForm){
     const {valid, errors} = data;

@@ -37,6 +37,10 @@ export class Page extends Component<IPage>{
   }
 
   set locked(lock:boolean){
-    //решить как блочить
+    if (lock) {
+      this._wrapper.classList.add('page__wrapper_locked');
+  } else {
+      this._wrapper.classList.remove('page__wrapper_locked');
+  }
   }
 }

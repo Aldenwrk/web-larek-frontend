@@ -4,9 +4,6 @@ import { cloneTemplate } from "../utils/utils";
 import { IEvents } from "./base/events";
 import { Component } from "./Component";
 
-/*interface ICardActions {
-  onClick: (event: MouseEvent) => void;
-}*/
 
 //общий родительский класс для всех карточек
 export class CardView extends Component<ICard>{
@@ -62,19 +59,12 @@ export class CardBasketView extends CardView{
     this._button = this.element.querySelector('.basket__item-delete');
     this._index = this.element.querySelector('.basket__item-index');
 
+    this._button.addEventListener('click', ()=>{
+      this.events.emit('card:remove', {card:this});
+      console.log('card:remove', {card:this});
+    });
 
-
-    if (this._button) {
-      this._button.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  } else {
-      container.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  }
+    
   }
 
   render(cardData:ICard){
@@ -89,6 +79,10 @@ export class CardBasketView extends CardView{
 
   set id(cardId:string){
     this._id = cardId;
+  }
+
+  get id(){
+    return this._id;
   }
 
   set title(cardTitle: string){
@@ -131,17 +125,10 @@ export class CardCatalogueView extends CardView{
     this._image = this.element.querySelector('.card__image');
     this._category = this.element.querySelector('.card__category');
 
-    if (this._button) {
-      this._button.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  } else {
-      container.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  }
+    container.addEventListener('click', ()=>{
+      this.events.emit('card:select', {card:this});
+      console.log('card:select', {card:this});
+    });
    // console.log(container);
     
   }
@@ -165,6 +152,10 @@ export class CardCatalogueView extends CardView{
 
   set id(cardId:string){
     this._id = cardId;
+  }
+
+  get id(){
+    return this._id;
   }
 
   set title(cardTitle: string){
@@ -206,24 +197,17 @@ export class CardPreview extends CardCatalogueView{
 
     this._title = this.element.querySelector('.card__title');
     this._price = this.element.querySelector('.card__price');
-    this._button = this.element.querySelector('.card');
+    this._button = this.element.querySelector('.card__button');
     this._image = this.element.querySelector('.card__image');
     this._category = this.element.querySelector('.card__category');
     this._description = this.element.querySelector('.card__text');
+    console.log(this._button)
     
-    if (this._button) {
-      this._button.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  } else {
-      container.addEventListener('click', ()=>{
-        this.events.emit('card:remove', {card:this});
-        console.log('card:remove', {card:this});
-      });
-  }
-  //  console.log(container);
-    
+    this._button.addEventListener('click', ()=>{
+      this.events.emit('card:add', {card:this});
+      console.log('card:add', {card:this});
+    });
+    this._button.addEventListener('click', (event) => event.stopPropagation());   
   }
 
   render(cardData:ICard){
@@ -238,12 +222,17 @@ export class CardPreview extends CardCatalogueView{
     if (image) this.image = image;
     if (category) this.category = category;
     Object.assign(this, otherCardData);
-    //console.log(this.element);
+    this.events.emit('preview:ready', {card:this});
+    //console.log('preview:ready', {card:this})
     return this.element;
   }
 
   set id(cardId:string){
     this._id = cardId;
+  }
+
+  get id(){
+    return this._id;
   }
 
   set title(cardTitle: string){
@@ -264,6 +253,14 @@ export class CardPreview extends CardCatalogueView{
 
   set description(cardDescription:string){
     this.setText(this._description, cardDescription);
+  }
+
+  blockButton(){
+    this.setDisabled(this._button, true);
+  }
+
+  unblockButton(){
+    this.setDisabled(this._button, false);
   }
 
   deleteCard(){

@@ -32,7 +32,7 @@ export class AppData implements IAppData {
     const selectedCard = this.getCard(cardId);
     if(selectedCard){
       this._preview = cardId;
-      this.events.emit('card:select');
+      //this.events.emit('card:select');
     }
   }
 
@@ -56,7 +56,6 @@ export class AppData implements IAppData {
     if(!this.checkInCart(cardId)){
       this._cart.push(this.getCard(cardId));
       this.updateIndex(this._cart);
-
       this.events.emit('basket:changed');
     } 
   };
@@ -81,5 +80,10 @@ export class AppData implements IAppData {
     this.total = this._cart.length
     return this.total;
   }
+
+  getSum(){
+    return this._cart.reduce((total, item)=>total + item.price, 0);
+  }
+   
  
 }

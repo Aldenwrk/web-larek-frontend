@@ -5,7 +5,7 @@ import { IFormErrors } from "../types";
 
 interface IForm extends IFormErrors{
   valid:boolean;
-  errors:string;
+  errors:string[];
 }
 
 export abstract class Form extends Component<IForm>{
@@ -43,9 +43,10 @@ export abstract class Form extends Component<IForm>{
     return this.container;
   }
 
-  set error(error:string){
-    this.setText(this._formErrorContainer, error);
+  set errors(errorMessages:string[]){
+    this.setText(this._formErrorContainer, errorMessages);
   }
+  
 
   render(data:IForm){
     const {valid, errors} = data;

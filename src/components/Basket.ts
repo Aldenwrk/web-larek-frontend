@@ -37,5 +37,13 @@ export class Basket extends Component<IBasket>{
       this._basketListContainer.replaceChildren(...basketCardsArray);   
     }
   }
-  //уточнить надо ли заглушку заглушку
+
+  blockButton(){
+    this.setDisabled(this._button, true);
+  }
+
+  unblockButton(){
+    this.setDisabled(this._button, false);
+  }
+  //уточнить надо ли заглушку
 }

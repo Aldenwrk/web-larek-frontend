@@ -36,7 +36,7 @@ export class Modal extends Component<IModalContent> {
 
   close(){
     this.toggleModal(false);
-    this._modalContent = null;
+    this.modalContent = null;
     this.events.emit('modal:close');
   }
 

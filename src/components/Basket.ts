@@ -32,18 +32,13 @@ export class Basket extends Component<IBasket>{
   }
 
   set items(basketCardsArray:HTMLElement[]){
-    console.log(basketCardsArray)
-    this.setText(this._basketListContainer, `скр скр скр в белых найках`)//работает
-   /* if(!basketCardsArray.length){
-      this._basketListContainer.replaceChildren(createElement<HTMLParagraphElement>('p', {
-        textContent: 'В корзине пусто'
-    }));
-    }else{
+   // console.log(basketCardsArray)
+   // console.log(this._basketListContainer)
+   // this.setText(this._basketListContainer, `скр скр скр в белых найках`)//работает
+    if(basketCardsArray.length){
       this._basketListContainer.replaceChildren(...basketCardsArray);
-    }*/
+    
+    }
   }
-  //уточнить про заглушку
-  //первым делом отладить штуку с replaceChildren - элемент определяется, данные передаются
-  //в методе всё равно undefined
-  //корзина выводится в модалку, не выводится контент
+  //уточнить надо ли заглушку заглушку
 }

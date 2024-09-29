@@ -51,3 +51,5 @@ export interface IApi {
   get<T>(uri: string): Promise<T>;
   post<T>(uri: string, data: object, method: ApiPostMethods): Promise<T>;
 }
+
+export type IFormErrors = Partial<Record<keyof IOrderData, string>>;

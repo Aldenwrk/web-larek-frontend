@@ -10,13 +10,16 @@ import { cloneTemplate } from './utils/utils';
 import { Page } from './components/Page';
 import { Modal } from './components/Modal';
 import { Basket } from './components/Basket';
+import { ContactForm } from './components/ContactForm';
+import { PaymentForm } from './components/PaymentForm';
 
 //шаблоны 
 const previewCardTemplate:HTMLTemplateElement = document.getElementById('card-preview') as HTMLTemplateElement;
 const basketCardTemplate:HTMLTemplateElement = document.getElementById('card-basket') as HTMLTemplateElement;
 const catalogCardTemplate:HTMLTemplateElement = document.getElementById('card-catalog') as HTMLTemplateElement;
 const basketTemplate: HTMLTemplateElement = document.getElementById('basket') as HTMLTemplateElement;
-
+const contactFormTemplate: HTMLTemplateElement = document.getElementById('contacts') as HTMLTemplateElement;
+const paymentFormTemplate: HTMLTemplateElement = document.getElementById('order') as HTMLTemplateElement;
 
 const events = new EventEmitter();
 
@@ -25,6 +28,8 @@ const appApi = new AppApi(baseApi);
 const appData = new AppData(events);
 const page = new Page (document.body, events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
+const contactForm = new ContactForm(cloneTemplate(contactFormTemplate), events);
+const paymentForm = new PaymentForm(cloneTemplate(paymentFormTemplate), events);
 
 //получаем карточки с сервера, сохраняем в модель 
 appApi.getCards().then((data)=>{
@@ -64,6 +69,14 @@ events.on('basket:open', ()=>{
     })
     modal.render({modalContent:basket.render({items:cardsArray3})})
   //  basket.render({items:cardsArray3})
+});
+
+events.on('order:open', ()=>{
+   modal.render({modalContent:paymentForm.render({valid: true, errors:"Заполните поля"})});    
+})
+
+events.on('order:submit', ()=>{
+    modal.render({modalContent:contactForm.render({valid: true, errors:"Заполните поля"})});
 })
 
 

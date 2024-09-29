@@ -19,7 +19,7 @@ export class Basket extends Component<IBasket>{
     this.items = [];//пустой массив, для разметки добавленных карточек и проверки
 
     this._basketListContainer = ensureElement<HTMLUListElement>('.basket__list', this.container);
-    console.log(this._basketListContainer)
+    //console.log(this._basketListContainer)
     this._button = ensureElement<HTMLButtonElement>('.basket__button', this.container);
     this._basketPriceTotal = ensureElement<HTMLElement>('.basket__price', this.container);
     this._button.addEventListener('click', ()=>{
@@ -33,11 +33,8 @@ export class Basket extends Component<IBasket>{
 
   set items(basketCardsArray:HTMLElement[]){
    // console.log(basketCardsArray)
-   // console.log(this._basketListContainer)
-   // this.setText(this._basketListContainer, `скр скр скр в белых найках`)//работает
     if(basketCardsArray.length){
-      this._basketListContainer.replaceChildren(...basketCardsArray);
-    
+      this._basketListContainer.replaceChildren(...basketCardsArray);   
     }
   }
   //уточнить надо ли заглушку заглушку

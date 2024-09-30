@@ -34,6 +34,15 @@ export interface IOrderData {
   phone: string;
 }
 
+export interface IServerOrderData {
+  payment: string;
+  address: string;
+  email: string;
+  phone: string;
+  total: number;
+  items:string[];
+}
+
 export interface IOrderResult {
   id: string;
   total: number|null;

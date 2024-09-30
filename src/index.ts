@@ -4,7 +4,7 @@ import { Api } from './components/base/api';
 import { EventEmitter } from './components/base/events';
 import { CardBasketView, CardCatalogueView, CardPreview } from './components/CardView';
 import './scss/styles.scss';
-import { IApi, IFormErrors, IOrderData } from './types';
+import { IApi, IFormErrors, IOrderData, IOrderResult } from './types';
 import { API_URL, settings } from './utils/constants';
 import { cloneTemplate } from './utils/utils';
 import { Page } from './components/Page';
@@ -13,6 +13,7 @@ import { Basket } from './components/Basket';
 import { ContactForm } from './components/ContactForm';
 import { PaymentForm } from './components/PaymentForm';
 import { OrderData } from './components/OrderData';
+import { Success } from './components/Success';
 
 //шаблоны 
 const previewCardTemplate:HTMLTemplateElement = document.getElementById('card-preview') as HTMLTemplateElement;
@@ -22,6 +23,7 @@ const basketTemplate: HTMLTemplateElement = document.getElementById('basket') as
 const contactFormTemplate: HTMLTemplateElement = document.getElementById('contacts') as HTMLTemplateElement;
 const paymentFormTemplate: HTMLTemplateElement = document.getElementById('order') as HTMLTemplateElement;
 const modalContainer = document.getElementById('modal-container');
+const successTemplate = document.getElementById('success') as HTMLTemplateElement;
 
 //экземпляры
 const events = new EventEmitter();
@@ -35,6 +37,7 @@ const paymentForm = new PaymentForm(cloneTemplate(paymentFormTemplate), events);
 const modal = new Modal(modalContainer, events);
 const cardPreview = new CardPreview(cloneTemplate(previewCardTemplate), events);
 const orderData = new OrderData(events);
+const successWindow = new Success(cloneTemplate(successTemplate), events);
 
 
 
@@ -148,16 +151,37 @@ events.on('order:submit', ()=> {
 //валидация
 events.on(/^contacts\..*:input/, (data: { field: keyof IOrderData; value: string }) => {
     const { field, value } = data
-    console.log(data);
+   // console.log(data);
     orderData.setContactFields(field, value);
-    console.log(orderData.getData());
+    //console.log(orderData.getData());
 });
 
 events.on('formErrorsContact:change', (formErrors: IFormErrors)=> {
-    console.log('formErrorsContact:change', formErrors)
+   // console.log('formErrorsContact:change', formErrors)
     const isEmpty = Object.keys(formErrors).length === 0
     const validation = {valid: isEmpty, errors: [formErrors.phone || '', formErrors.email || '']}
-    console.log(formErrors)
-    console.log(validation)
+   // console.log(formErrors)
+    //console.log(validation)
     contactForm.render(validation)
 });
+
+events.on('contacts:submit', ()=>{
+    const userInfo = orderData.getData();
+    const total = appData.getSum();
+    const items = appData.getIdList();
+    const orderObj = {...userInfo, total, items};
+    console.log(orderObj);
+    appApi.sendOrderData(orderObj)
+    .then((response:IOrderResult)=>{
+        modal.render({modalContent:successWindow.render({total:response.total})});
+        orderData.resetOrder();
+        appData.resetBasket();
+    })
+    .catch((err)=>{
+        console.error(err);
+    });
+});
+
+events.on('success:close', ()=>{
+    modal.close();
+})

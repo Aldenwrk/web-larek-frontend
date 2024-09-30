@@ -84,6 +84,18 @@ export class AppData implements IAppData {
   getSum(){
     return this._cart.reduce((total, item)=>total + item.price, 0);
   }
+
+  getIdList(){
+    const idList:string[] = [];
+    for(let i = 0; i < this._cart.length;i++){
+      idList.push(this._cart[i].id);
+    }
+    return idList;
+  }
+
+  resetBasket(){
+    this._cart = [];
+  }
    
  
 }

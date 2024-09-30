@@ -48,8 +48,14 @@ setContactFields(field: keyof IOrderData, value: string) {
   set email(inputEmail:string){
     this._email = inputEmail;
   }
+  get email(){
+    return this._email
+  }
   set phone(inputPhone:string){
     this._phone = inputPhone;
+  }
+  get phone(){
+    return this._phone
   }
 
   validatePaymentForm(){

@@ -120,29 +120,44 @@ events.on('basket:changed', ()=>{
     basket.total = appData.getSum();
 });
 //события форм заказа
+//открытие формы оплаты
 events.on('order:open', ()=>{
     modal.render({modalContent:paymentForm.render({valid: false, errors: [], address: '', payment: ''})}); 
  });
-
-
-
+//валидация
 events.on(/^order\..*:input/, (data: { field: keyof IOrderData; value: string }) => {
     const { field, value } = data
-    console.log(data);
+   // console.log(data);
     orderData.setPaymentFields(field, value);
-    console.log(orderData.getData());
+    //console.log(orderData.getData());
 });
 
 events.on('formErrorsPayment:change', (formErrors: IFormErrors)=> {
-    console.log('formErrorsPayment:change')
+    //console.log('formErrorsPayment:change')
     const isEmpty = Object.keys(formErrors).length === 0
     const validation = {valid: isEmpty, errors: [formErrors.address || '', formErrors.payment || '']}
-    console.log(formErrors)
-    console.log(validation)
+   // console.log(formErrors)
+    //console.log(validation)
     paymentForm.render(validation)
 });
-
+//открытие формы контактов
 events.on('order:submit', ()=> {
     // console.log(orderData.getUserDate());
     modal.render({modalContent:contactForm.render({valid: false, errors: [], address: '', payment: ''})});
+});
+//валидация
+events.on(/^contacts\..*:input/, (data: { field: keyof IOrderData; value: string }) => {
+    const { field, value } = data
+    console.log(data);
+    orderData.setContactFields(field, value);
+    console.log(orderData.getData());
+});
+
+events.on('formErrorsContact:change', (formErrors: IFormErrors)=> {
+    console.log('formErrorsContact:change', formErrors)
+    const isEmpty = Object.keys(formErrors).length === 0
+    const validation = {valid: isEmpty, errors: [formErrors.phone || '', formErrors.email || '']}
+    console.log(formErrors)
+    console.log(validation)
+    contactForm.render(validation)
 });

@@ -124,16 +124,22 @@ events.on('order:open', ()=>{
     modal.render({modalContent:paymentForm.render({valid: false, errors: [], address: '', payment: ''})}); 
  });
 
- events.on('formErrorsPayment:change', (formErrors: IFormErrors)=> {
-    const isEmpty = Object.keys(formErrors).length === 0
-    const validation = {errors: [formErrors.address || '', formErrors.payment || ''], valid: isEmpty}
-    paymentForm.render(validation)
-});
 
-events.on(/^order\..*:change/, (data: { field: keyof IOrderData; value: string }) => {
+
+events.on(/^order\..*:input/, (data: { field: keyof IOrderData; value: string }) => {
     const { field, value } = data
     console.log(data);
-    orderData.setPaymentFields(field, value)
+    orderData.setPaymentFields(field, value);
+    console.log(orderData.getData());
+});
+
+events.on('formErrorsPayment:change', (formErrors: IFormErrors)=> {
+    console.log('formErrorsPayment:change')
+    const isEmpty = Object.keys(formErrors).length === 0
+    const validation = {valid: isEmpty, errors: [formErrors.address || '', formErrors.payment || '']}
+    console.log(formErrors)
+    console.log(validation)
+    paymentForm.render(validation)
 });
 
 events.on('order:submit', ()=> {

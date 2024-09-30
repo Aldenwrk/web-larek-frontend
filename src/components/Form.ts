@@ -31,7 +31,8 @@ export abstract class Form<T> extends Component<IForm>{
       const target = evt.target as HTMLInputElement;
       const field = target.name;
       const value = target.value;
-      this.events.emit(`${this.formName}:input`, {field, value});
+      this.events.emit(`${this.formName}.${field}:input`, {field, value});
+      console.log(`${this.formName}.${field}:input`, {field, value})
     })
   }
 

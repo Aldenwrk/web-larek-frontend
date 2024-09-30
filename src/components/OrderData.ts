@@ -16,10 +16,10 @@ export class OrderData implements IOrderData{
 
   getData(){
     return {
-      payment: this.payment,
-      address: this.address,
-      email: this.email,
-      phone: this.phone
+      payment: this._payment,
+      address: this._address,
+      email: this._email,
+      phone: this._phone
     }
   }
 
@@ -36,8 +36,14 @@ setContactFields(field: keyof IOrderData, value: string) {
   set payment(inputPayment:string){
     this._payment = inputPayment;
   }
+  get payment(){
+    return this._payment
+  }
   set address(inputAddress:string){
     this._address = inputAddress;
+  }
+  get address(){
+    return this._address
   }
   set email(inputEmail:string){
     this._email = inputEmail;

@@ -13,7 +13,8 @@ export class PaymentForm extends Form<IPaymentForm> {
   constructor(container:HTMLFormElement, events:IEvents){
     super(container, events);
 
-    this._paymentButtons = ensureAllElements<HTMLButtonElement>('button_alt', container);
+    this._paymentButtons = ensureAllElements<HTMLButtonElement>('.button_alt', container);
+    console.log(this._paymentButtons)
 
     this._paymentButtons.forEach((item) => {
       item.addEventListener('click', ()=>{
@@ -22,10 +23,11 @@ export class PaymentForm extends Form<IPaymentForm> {
         })
 
         this.toggleClass(item, 'button_alt-active', true);
-        events.emit(`${this.formName}:paymentChange`, {
+        events.emit(`${this.formName}.payment:input`, {
           field:'payment',
           value:item.name
         })
+        console.log(`${this.formName}.payment:input`, {field:'payment',value:item.name})
       })
     });
   }

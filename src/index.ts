@@ -173,9 +173,11 @@ events.on('contacts:submit', ()=>{
     console.log(orderObj);
     appApi.sendOrderData(orderObj)
     .then((response:IOrderResult)=>{
-        modal.render({modalContent:successWindow.render({total:response.total})});
         orderData.resetOrder();
         appData.resetBasket();
+        basket.basketReset();
+        events.emit('basket:changed')
+        modal.render({modalContent:successWindow.render({total:response.total})});
     })
     .catch((err)=>{
         console.error(err);

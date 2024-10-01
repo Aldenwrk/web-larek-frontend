@@ -172,7 +172,16 @@ export class CardCatalogueView extends CardView{
 
   set category(cardCategory:string){
     this.setText(this._category, cardCategory);
+    const categories: {[key:string]:string} = {
+      "софт-скил":"soft",
+      "хард-скил":"hard",
+      "другое":"other",
+      "дополнительное":"additional",
+      "кнопка":"button"
+    };
+    this.toggleClass(this._category, `card__category_${categories[cardCategory]}`, true)
   }
+
   deleteCard(){
     this.element.remove();
     this.element = null;
@@ -240,7 +249,7 @@ export class CardPreview extends CardCatalogueView{
   }
 
   set price(cardPrice:number|null){
-    cardPrice === null ? this.setText(this._price, "Бесценно") : this.setText(this._price, cardPrice.toString());
+    cardPrice === null ? this.setText(this._price, "Бесценно") : this.setText(this._price, `${cardPrice.toString()} синапсов`);
   }
 
   set image(cardImage:string){
@@ -249,6 +258,14 @@ export class CardPreview extends CardCatalogueView{
 
   set category(cardCategory:string){
     this.setText(this._category, cardCategory);
+    const categories: {[key:string]:string} = {
+      "софт-скил":"soft",
+      "хард-скил":"hard",
+      "другое":"other",
+      "дополнительное":"additional",
+      "кнопка":"button"
+    };
+    this.toggleClass(this._category, `card__category_${categories[cardCategory]}`, true)
   }
 
   set description(cardDescription:string){

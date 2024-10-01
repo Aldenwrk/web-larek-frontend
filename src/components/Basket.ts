@@ -45,5 +45,9 @@ export class Basket extends Component<IBasket>{
   unblockButton(){
     this.setDisabled(this._button, false);
   }
+
+  basketReset(){
+    this._basketListContainer.replaceChildren();
+  }
   //уточнить надо ли заглушку
 }

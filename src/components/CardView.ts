@@ -171,6 +171,8 @@ export class CardCatalogueView extends CardView{
   }
 
   set category(cardCategory:string){
+    const categoryBaseclass = 'card__category';
+    this._category.className = categoryBaseclass;
     this.setText(this._category, cardCategory);
     const categories: {[key:string]:string} = {
       "софт-скил":"soft",
@@ -257,6 +259,8 @@ export class CardPreview extends CardCatalogueView{
   }
 
   set category(cardCategory:string){
+    const categoryBaseclass = 'card__category';
+    this._category.className = categoryBaseclass;
     this.setText(this._category, cardCategory);
     const categories: {[key:string]:string} = {
       "софт-скил":"soft",
